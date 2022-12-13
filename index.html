@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+    <h1>Monte Carlo Method</h1>
+    <form id="form">
+        <label for="number">number of coordinates:</label><br>
+        <input type="text" id="number" name="number" value="100"><br>
+        <input type="submit" value="Calculate">
+    </form>
+    <p id="log">ge</p>
+
+    <canvas id="canvas" width="340" height="340"></canvas>
+    <script>
+        function calcSubmit(event) {
+            let number = document.getElementById("number").value;
+            log.innerHTML = calculate(number);
+            event.preventDefault();
+        }
+        function calculate(number) {
+            let coordinates;
+            //points counter inside circle
+            let ins_crcl = 0;
+            //points counter outside circle
+            let out_crcl = 0;
+            //hypotenuse
+            let hypotenuse;
+            //canvas for visualisation
+            const canvas = document.getElementById("canvas");
+
+            //context for drawing in canvas
+            if (canvas.getContext) {
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = "rgb(200, 0, 0)";
+                ctx.fillRect(10, 10, 320, 320);
+                ctx.fillStyle = "rgb(100, 200, 100)";
+                ctx.beginPath();
+                ctx.arc(170, 170, 160, 0, 2 * Math.PI);
+                ctx.fill();
+                //loop
+                for (let i = 0; i < number; i++) {
+                    //generating x & y coordinates (-1) to (+1)
+                    coordinates = [Math.random() * 2 - 1, Math.random() * 2 - 1];
+                    //console.log(coordinates);
+                    //is coordinate inside circle or square?
+                    //is hypotenuse greater or smaller than 1?
+                    hypotenuse = Math.sqrt(Math.pow(coordinates[0], 2) + Math.pow(coordinates[1], 2));
+                    //console.log(hypotenuse)
+                    if (hypotenuse < 1) {
+                        ins_crcl++;
+                        //add dot for point
+                        ctx.fillStyle = "rgb(000, 000, 000)";
+                        console.log(coordinates[0]);
+                        ctx.fillRect(coordinates[0]*160+169,coordinates[1]*160+169,2,2)
+                    } else {
+                        out_crcl++;
+                        ctx.fillStyle = "rgb(255, 255, 000)";
+                        console.log(coordinates[0]);
+                        ctx.fillRect(coordinates[0]*160+169,coordinates[1]*160+169,2,2)
+                    }
+                }
+            }
+            console.log(ins_crcl);
+            console.log(out_crcl);
+            //counter points inside square
+            let ins_sqr = ins_crcl + out_crcl;
+            let approximation = 4 * (ins_crcl / ins_sqr);
+            return approximation;
+        }
+        const form = document.getElementById('form');
+        const log = document.getElementById('log');
+        log.innerHTML = "abc";
+
+        form.addEventListener('submit', calcSubmit);
+    </script>
+</body>
+
+</html>
