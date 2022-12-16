@@ -17,10 +17,11 @@
     <script>
         function calcSubmit(event) {
             let number = document.getElementById("number").value;
-            log.innerHTML = calculate(number);
+            log.innerHTML = "Pi approximation";
+            calculate(number);
             event.preventDefault();
         }
-        function calculate(number) {
+        async function calculate(number) {
             let coordinates;
             //points counter inside circle
             let ins_crcl = 0;
@@ -42,6 +43,9 @@
                 ctx.fill();
                 //loop
                 for (let i = 0; i < number; i++) {
+                    if (i % 10 == 0) {
+                        await new Promise(r => setTimeout(r, 1));
+                    }
                     //generating x & y coordinates (-1) to (+1)
                     coordinates = [Math.random() * 2 - 1, Math.random() * 2 - 1];
                     //console.log(coordinates);
@@ -54,21 +58,29 @@
                         //add dot for point
                         ctx.fillStyle = "rgb(000, 000, 000)";
                         console.log(coordinates[0]);
-                        ctx.fillRect(coordinates[0]*160+169,coordinates[1]*160+169,2,2)
+                        ctx.fillRect(coordinates[0] * 160 + 169, coordinates[1] * 160 + 169, 2, 2)
                     } else {
                         out_crcl++;
                         ctx.fillStyle = "rgb(255, 255, 000)";
                         console.log(coordinates[0]);
-                        ctx.fillRect(coordinates[0]*160+169,coordinates[1]*160+169,2,2)
+                        ctx.fillRect(coordinates[0] * 160 + 169, coordinates[1] * 160 + 169, 2, 2)
+                    }
+                    if (i % 10 == 0) {
+                        updateApprox(ins_crcl, out_crcl);
                     }
                 }
             }
-            console.log(ins_crcl);
+            /*console.log(ins_crcl);
             console.log(out_crcl);
             //counter points inside square
             let ins_sqr = ins_crcl + out_crcl;
             let approximation = 4 * (ins_crcl / ins_sqr);
-            return approximation;
+            return approximation;*/
+        }
+        function updateApprox(ic_param, oc_param) {
+            let ins_sqr = ic_param + oc_param;
+            let approximation = 4 * (ic_param / ins_sqr);
+            log.innerHTML = approximation;
         }
         const form = document.getElementById('form');
         const log = document.getElementById('log');
